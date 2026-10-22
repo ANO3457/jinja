@@ -147,6 +147,14 @@ class TestFilter:
         t = env.from_string("{{ value|float }}")
         assert t.render(value=value) == expect
 
+    def test_urlencode_mapping(self):
+        from collections import UserDict
+
+        e = Environment()
+        t = e.from_string("{{ value|urlencode }}")
+        res = t.render(value=UserDict({"Aa": "PersonA@123.com", "Bb": "PersonB@123.com"}))
+        assert res == "Aa=PersonA%40123.com&Bb=PersonB%40123.com"
+
     def test_float_default(self, env):
         t = env.from_string("{{ value|float(default=1.0) }}")
         assert t.render(value="abc") == "1.0"
